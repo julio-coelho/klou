@@ -1,0 +1,27 @@
+{
+  "name": "klou",
+  "version": "1.0.0",
+  "description": "Klou Services",
+  "main": "app.js",
+  "scripts": {
+    "test": "NODE_ENV=test mocha -w app.js test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/julio-coelho/klou.git"
+  },
+  "author": "Julio Coelho",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/julio-coelho/klou/issues"
+  },
+  "homepage": "https://github.com/julio-coelho/klou#readme",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "express": "^4.13.3"
+  },
+  "devDependencies": {
+    "mocha": "^2.3.3",
+    "supertest": "^1.1.0"
+  }
+}
