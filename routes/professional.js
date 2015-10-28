@@ -1,13 +1,17 @@
+'use strict';
+
 var express = require('express');
 var router = express.Router();
 
-var bodyParser = require('body-parser');
-var urlencodedParser = bodyParser.urlencoded({ extended : false });
+var model = require('./../models/professional');
 
 router.route('/')
 
-  .post(urlencodedParser, function(request, response) {
-    response.sendStatus(201);
+  .post(function(request, response) {
+    var professional = request.body;
+    model.save(professional, function(err, data) {
+      response.sendStatus(201);
+    });
   });
 
 router.route('/:id')
