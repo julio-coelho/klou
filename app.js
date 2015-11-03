@@ -8,7 +8,6 @@ var professional = require('./routes/professional');
 
 //content-type
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended : false }));
 
 //routes
 app.use('/professional', professional);
