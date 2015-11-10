@@ -25,7 +25,7 @@ exports.connect = function() {
   client.connect(connectionString, function(err, database) {
     if (err) throw err;
 
-    console.log('MongoDB running on ' + (process.env.NODE_ENV || 'development') + ' environment');
+    console.log('mongodb-server running on ' + (process.env.NODE_ENV || 'development') + ' environment');
 
     database.on('error', function(err) {
       console.log('database error - ' + err);

@@ -55,4 +55,14 @@ router.route('/schedule')
     });
   });
 
+router.route('/package')
+
+  .post(function(request, response) {
+    var _id = request.body._id;
+    var pkg = request.body.package;
+    model.savePackage(_id, pkg, function(err, data) {
+      response.status(201).json(data);
+    });
+  });
+
 module.exports = router;

@@ -1,18 +1,31 @@
+'use strict';
+
 var express = require('express');
 var app = express();
-var bodyParser = require('body-parser');
 
-var dbconnection = require('./lib/db-connection');
+//passport
+var passport = require('passport');
+app.use(passport.initialize());
 
-var professional = require('./routes/professional');
+//mongodb
+var mongodb = require('./services/mongodb');
+mongodb.connect();
+
+//authentication
+var authenticator = require('./services/authenticator');
+authenticator.init();
 
 //content-type
+var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
-//routes
-app.use('/professional', professional);
+//authorization
+var jwt = require('express-jwt');
+app.use(jwt({ secret: process.env.TOKEN_SECRET }).unless({path: ['/auth']}));
 
-//db-connection
-dbconnection.connect();
+//routes
+var routes = require('./controllers/routes');
+app.use(routes);
+
 
 module.exports = app;

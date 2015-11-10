@@ -2,6 +2,7 @@
 
 var mongodb = require('mongodb');
 var ObjectId = mongodb.ObjectId;
+var _ = require('underscore');
 
 exports.findById = function(_id, callback) {
 
@@ -10,7 +11,8 @@ exports.findById = function(_id, callback) {
   var query = {'_id': new ObjectId(_id)};
 
   collection.find(query).limit(1).next(function(err, result) {
-   callback(err, result);
+    if (err) callback(err, null);
+    callback(err, result);
   });
 };
 
@@ -41,6 +43,14 @@ exports.findOrCreate = function(professional, callback) {
     { '_id': 5, 'name' : 'Mão NailArt', 'active' : false, 'price' : 0, 'duration' : 60, 'interval' : 10 }
   ];
 
+  //default packages
+  professional.packages = [
+    { '_id': 1, 'duration': 50, 'interval': 10, 'active': false, 'price': 0,
+      'services': [ { 'name': 'Mão Simples', 'quantity': 4 },
+                    { 'name': 'Pé Simples', 'quantity': 2 } ]
+    }
+  ];
+
   //created
   professional.created = +new Date();
 
@@ -53,7 +63,8 @@ exports.findOrCreate = function(professional, callback) {
   var newProfessional = {'$setOnInsert': professional};
 
   collection.findOneAndUpdate(query, newProfessional, options, function(err, result) {
-   callback(err, result.value);
+    if (err) callback(err, null);
+    callback(err, result.value);
   });
 };
 
@@ -64,7 +75,8 @@ exports.delete = function(_id, callback) {
   var query = {'_id': new ObjectId(_id)};
 
   collection.deleteOne(query, function(err, result) {
-   callback(err, result.deletedCount);
+    if (err) callback(err, null);
+    callback(err, result.deletedCount);
   });
 };
 
@@ -77,6 +89,7 @@ exports.saveService = function(_id, service, callback) {
   var options = {'returnOriginal': false, 'projection': {'services': true}};
 
   collection.findOneAndUpdate(query, update, options, function(err, result) {
+    if (err) callback(err, null);
     callback(err, result.value);
   });
 };
@@ -90,7 +103,44 @@ exports.saveSchedule = function(_id, schedule, callback) {
   var options = {'returnOriginal': false, 'projection': {'schedule': true}};
 
   collection.findOneAndUpdate(query, update, options, function(err, result) {
+    if (err) callback(err, null);
     callback(err, result.value);
+  });
+};
+
+exports.savePackage = function(_id, pkg, callback) {
+
+  var collection = mongodb.DB.collection('professional');
+
+  var _package = _.clone(pkg);
+
+  var query = undefined;
+  var update = undefined;
+  var options = undefined;
+
+  if (pkg._id) {
+    _package.updated = +new Date();
+    _package._id = new ObjectId(pkg._id);
+
+    query = {'_id': new ObjectId(_id), 'packages': {'$elemMatch': {'_id': _package._id}}};
+    update = {'$set': {'packages.$': _package, 'updated': +new Date()}};
+    options = {'returnOriginal': false, 'projection': {'packages': true}};
+
+  } else {
+    _package.updated = +new Date();
+    _package.created = +new Date();
+    _package._id = new ObjectId();
+
+    query = {'_id': new ObjectId(_id)};
+    update = {'$push': {'packages': _package}, '$set': {'updated': +new Date()}};
+    options = {'returnOriginal': false, 'projection': {'packages': true}};
+
+  }
+
+  collection.updateOne(query, update, options, function(err, result) {
+    if (err) callback(err, null);;
+
+    callback(err, _package._id);
   });
 };
 
@@ -105,6 +155,7 @@ exports.save = function(professional, callback) {
   professional.updated = +new Date();
 
   collection.findOneAndUpdate(query, professional, options, function(err, result) {
+    if (err) callback(err, null);
     callback(err, result.value);
   });
 };
