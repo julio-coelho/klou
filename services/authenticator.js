@@ -34,7 +34,9 @@ var authenticator = {
       model.findOrCreate(professional, function(err, data) {
         if (err) throw err;
 
-        return done(null, token.encode(data));
+        var authorization = { "Authorization": "Bearer " + token.encode(data) };
+
+        return done(null, authorization);
       });
     }));
   }
