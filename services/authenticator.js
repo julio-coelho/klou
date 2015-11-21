@@ -2,9 +2,11 @@
 
 var passport = require('passport');
 var FacebookTokenStrategy = require('passport-facebook-token');
+var request = require('request');
 
 var token = require('./../services/token-util');
-var model = require('./../models/professional');
+var modelProfessional = require('./../models/professional');
+var modelCustomer = require('./../models/customer');
 
 var authenticator = {
 
@@ -20,27 +22,40 @@ var authenticator = {
 
     var facebookClientArgs = {
       'clientID': process.env.FACEBOOK_CLIENT_ID,
-      'clientSecret': process.env.FACEBOOK_CLIENT_SECRET
+      'clientSecret': process.env.FACEBOOK_CLIENT_SECRET,
+      'passReqToCallback': true
     };
 
-    passport.use(new FacebookTokenStrategy(facebookClientArgs, function(accessToken, refreshToken, profile, done) {
+    passport.use(new FacebookTokenStrategy(facebookClientArgs, function(req, accessToken, refreshToken, profile, done) {
 
-      //TODO: request data from Facebook to create a new user
-      var professional = {
+      var user = {
         'facebook_uid': profile.id,
-        'name': profile.displayName || profile.name
+        'name': profile.displayName || profile.name.givenName + " " + profile.name.familyName,
+        'gender': profile.gender,
+        'email': profile.emails[0].value
       };
 
-      model.findOrCreate(professional, function(err, data) {
-        if (err) throw err;
+      request(profile.photos[0].value + '&redirect=false', function(err, resp, body) {
+        user.picture = JSON.parse(body).data.url;
 
-        var authorization = { "Authorization": "Bearer " + token.encode(data) };
+        if (req.body.profile === 'professional') {
+          modelProfessional.findOrCreate(user, function(err, data) {
+            if (err) throw err;
 
-        return done(null, authorization);
+            data.profile = 'professional';
+            return done(null, { "Authorization": "Bearer " + token.encode(data) });
+          });
+        } else {
+          modelCustomer.findOrCreate(user, function(err, data) {
+            if (err) throw err;
+
+            data.profile = 'customer';
+            return done(null, { "Authorization": "Bearer " + token.encode(data) });
+          });
+        }
       });
     }));
   }
-
 };
 
 

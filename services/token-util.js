@@ -6,8 +6,9 @@ var options = { };
 
 exports.encode = function(user, callback) {
 
-  return jwt.sign(user._id, key, options);
+  var payload = { "_id": user._id, "profile": user.profile };
 
+  return jwt.sign(payload, key, options);
 };
 
 exports.decode = function(token, callback) {
@@ -17,5 +18,4 @@ exports.decode = function(token, callback) {
 
     callback(null, decoded);
   });
-
 };

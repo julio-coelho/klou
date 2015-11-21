@@ -3,6 +3,8 @@ var app = require('./app');
 
 describe('Request to authentication service', function(){
 
+  this.timeout(5000);
+
   var _token = undefined;
 
   it('Returns a 200 status code', function(done){
@@ -10,7 +12,7 @@ describe('Request to authentication service', function(){
     request(app)
     .post('/auth')
     .set('Content-Type', 'application/json')
-    .send({'access_token': 'CAAM5Ey1sa0gBAK3VrFjmZAG9TTOLlSQhrjvOXQgF5B7jrjzsTH6f9ogXbe8eQYuxiGBohCUCZAoS1ZByfDYaQtWZBGQjAT54FitYXqcZAbyOL3ZAp1aPh9DuniLkZAboEwwuwKm9lRgZBceQscAOtsWbEIv6oOW1uhUFARW7aKyHK6YywJIq4wcV'})
+    .send({'access_token': 'CAAM5Ey1sa0gBAK3VrFjmZAG9TTOLlSQhrjvOXQgF5B7jrjzsTH6f9ogXbe8eQYuxiGBohCUCZAoS1ZByfDYaQtWZBGQjAT54FitYXqcZAbyOL3ZAp1aPh9DuniLkZAboEwwuwKm9lRgZBceQscAOtsWbEIv6oOW1uhUFARW7aKyHK6YywJIq4wcV', 'profile': 'professional'})
     .expect(200, done);
   });
 
