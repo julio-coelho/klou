@@ -1,9 +1,9 @@
 var request = require('supertest');
 var app = require('./app');
 
-var _token = undefined;
-
 describe('Request to authentication service', function(){
+
+  var _token = undefined;
 
   it('Returns a 200 status code', function(done){
 
@@ -48,6 +48,47 @@ describe('Requests to the professional services', function(){
 
     request(app)
     .delete('/professional')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IjU2NDBjMzMyYjU5OTM3NTEyMGFlMjYwOCI.npPlRjlsT8GJhKyXHx-E43EocDp44KMhFBs3A7GyT34')
+    .send({"_id": _id})
+    .expect(204, done);
+
+  });
+
+});
+
+describe('Requests to the customer services', function(){
+
+  var _id = undefined;
+
+  it('Returns a 201 status code', function(done){
+
+    request(app)
+    .put('/customer')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IjU2NDBjMzMyYjU5OTM3NTEyMGFlMjYwOCI.npPlRjlsT8GJhKyXHx-E43EocDp44KMhFBs3A7GyT34')
+    .send({"name": "Mock", "lastName": "Test", "facebook_uid": 12345})
+    .expect(201)
+    .end(function(err, response) {
+      _id = response.body._id;
+      done();
+    })
+  });
+
+  it('Returns a 200 status code', function(done){
+
+    request(app)
+    .get('/customer?_id=' + _id)
+    .set('Content-Type', 'application/json')
+    .set('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IjU2NDBjMzMyYjU5OTM3NTEyMGFlMjYwOCI.npPlRjlsT8GJhKyXHx-E43EocDp44KMhFBs3A7GyT34')
+    .expect(200, /mock/i,  done);
+
+  });
+
+  it('Returns a 204 status code', function(done){
+
+    request(app)
+    .delete('/customer')
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IjU2NDBjMzMyYjU5OTM3NTEyMGFlMjYwOCI.npPlRjlsT8GJhKyXHx-E43EocDp44KMhFBs3A7GyT34')
     .send({"_id": _id})
