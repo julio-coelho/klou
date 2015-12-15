@@ -3,6 +3,7 @@
 var mongodb = require('mongodb');
 var ObjectId = mongodb.ObjectId;
 var _ = require('underscore');
+var appointment = require('./appointment');
 
 exports.findById = function(_id, callback) {
 
@@ -45,7 +46,7 @@ exports.findOrCreate = function(professional, callback) {
 
   //default packages
   professional.packages = [
-    { '_id': 1, 'duration': 50, 'interval': 10, 'active': false, 'price': 0,
+    { '_id': new ObjectId(), 'duration': 50, 'interval': 10, 'active': false, 'price': 0,
       'services': [ { 'name': 'Mão Simples', 'quantity': 4 },
                     { 'name': 'Pé Simples', 'quantity': 2 } ]
     }
@@ -64,7 +65,12 @@ exports.findOrCreate = function(professional, callback) {
 
   collection.findOneAndUpdate(query, newProfessional, options, function(err, result) {
     if (err) callback(err, null);
-    callback(err, result.value);
+
+    appointment.create(result.value._id, new Date().getFullYear(), new Date().getMonth(), function (err_1, result_1) {
+      if (err_1) callback(err_1, null);
+
+      callback(err_1, result.value);
+    });
   });
 };
 
@@ -138,7 +144,7 @@ exports.savePackage = function(_id, pkg, callback) {
   }
 
   collection.updateOne(query, update, options, function(err, result) {
-    if (err) callback(err, null);;
+    if (err) callback(err, null);
 
     callback(err, _package._id);
   });
