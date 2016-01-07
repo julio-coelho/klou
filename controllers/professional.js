@@ -21,17 +21,19 @@ router.route('/')
     });
   })
 
-  .get(function(request, response) {
-    var _id = request.query._id;
-    model.findById(_id, function(err, data) {
-      response.status(200).json(data);
-    });
-  })
-
   .delete(function(request, response) {
     var _id = request.body._id;
     model.delete(_id, function(err, data) {
       response.sendStatus(204);
+    });
+  });
+
+router.route('/:_id')
+
+  .get(function(request, response) {
+    var _id = request.params._id;
+    model.findById(_id, function(err, data) {
+      response.status(200).json(data);
     });
   });
 

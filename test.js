@@ -39,7 +39,7 @@ describe('Requests to the professional services', function(){
   it('Returns a 200 status code', function(done){
 
     request(app)
-    .get('/professional?_id=' + _id)
+    .get('/professional/' + _id)
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IjU2NDBjMzMyYjU5OTM3NTEyMGFlMjYwOCI.npPlRjlsT8GJhKyXHx-E43EocDp44KMhFBs3A7GyT34')
     .expect(200, /mock/i,  done);
@@ -80,7 +80,7 @@ describe('Requests to the customer services', function(){
   it('Returns a 200 status code', function(done){
 
     request(app)
-    .get('/customer?_id=' + _id)
+    .get('/customer/' + _id)
     .set('Content-Type', 'application/json')
     .set('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.IjU2NDBjMzMyYjU5OTM3NTEyMGFlMjYwOCI.npPlRjlsT8GJhKyXHx-E43EocDp44KMhFBs3A7GyT34')
     .expect(200, /mock/i,  done);
