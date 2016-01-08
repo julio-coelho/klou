@@ -3,28 +3,23 @@
 var express = require('express');
 var router = express.Router();
 
-var model = require('./../models/professional');
+var model = require('./../models/packs');
 
 router.route('/')
 
   .post(function(request, response) {
-    var entity = request.body;
-    model.create(entity, function(err, data) {
+    var _id = request.body._id;
+    var entity = request.body.packs;
+    model.create(_id, entity, function(err, data) {
       response.status(201).json(data);
     });
   })
 
   .put(function(request, response) {
-    var entity = request.body;
-    model.update(entity, function(err, data) {
-      response.status(201).json(data);
-    });
-  })
-
-  .delete(function(request, response) {
     var _id = request.body._id;
-    model.delete(_id, function(err, data) {
-      response.sendStatus(204);
+    var entity = request.body.packs;
+    model.update(_id, entity, function(err, data) {
+      response.status(201).json(data);
     });
   });
 

@@ -39,7 +39,7 @@ var authenticator = {
         user.picture = JSON.parse(body).data.url;
 
         if (req.body.profile === 'professional') {
-          modelProfessional.findOrCreate(user, function(err, data) {
+          modelProfessional.create(user, function(err, data) {
             if (err) throw err;
 
             data.profile = 'professional';

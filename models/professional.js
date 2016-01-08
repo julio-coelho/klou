@@ -5,58 +5,48 @@ var ObjectId = mongodb.ObjectId;
 var _ = require('underscore');
 var appointment = require('./appointment');
 
-exports.findById = function(_id, callback) {
-
-  var collection = mongodb.DB.collection('professional');
-
-  var query = {'_id': new ObjectId(_id)};
-
-  collection.find(query).limit(1).next(function(err, result) {
-    if (err) callback(err, null);
-    callback(err, result);
-  });
-};
-
-exports.findOrCreate = function(professional, callback) {
+exports.create = function(professional, callback) {
 
   var collection = mongodb.DB.collection('professional');
 
   var query = {'facebook_uid': professional.facebook_uid};
   var options = {'upsert': true, 'returnOriginal': false};
 
+  var now = +new Date();
+
   //default schedule
   professional.schedule = [
-    {'dayOfWeek': 1, 'shifts': [{'start': '08:00', 'end': '12:00'}, {'start': '13:00', 'end': '17:00'}]},
-    {'dayOfWeek': 2, 'shifts': [{'start': '08:00', 'end': '12:00'}, {'start': '13:00', 'end': '17:00'}]},
-    {'dayOfWeek': 3, 'shifts': [{'start': '08:00', 'end': '12:00'}, {'start': '13:00', 'end': '17:00'}]},
-    {'dayOfWeek': 4, 'shifts': [{'start': '08:00', 'end': '12:00'}, {'start': '13:00', 'end': '17:00'}]},
-    {'dayOfWeek': 5, 'shifts': [{'start': '08:00', 'end': '12:00'}, {'start': '13:00', 'end': '17:00'}]},
-    {'dayOfWeek': 6, 'shifts': [{'start': '09:00', 'end': '12:00'}, {'start': '14:00', 'end': '19:00'}]},
-    {'dayOfWeek': 7, 'shifts': []}
+    {'dayOfWeek': 1, 'shifts': [{'start': '08:00', 'end': '12:00'}, {'start': '13:00', 'end': '17:00'}], 'created' : now, 'updated' : now},
+    {'dayOfWeek': 2, 'shifts': [{'start': '08:00', 'end': '12:00'}, {'start': '13:00', 'end': '17:00'}], 'created' : now, 'updated' : now},
+    {'dayOfWeek': 3, 'shifts': [{'start': '08:00', 'end': '12:00'}, {'start': '13:00', 'end': '17:00'}], 'created' : now, 'updated' : now},
+    {'dayOfWeek': 4, 'shifts': [{'start': '08:00', 'end': '12:00'}, {'start': '13:00', 'end': '17:00'}], 'created' : now, 'updated' : now},
+    {'dayOfWeek': 5, 'shifts': [{'start': '08:00', 'end': '12:00'}, {'start': '13:00', 'end': '17:00'}], 'created' : now, 'updated' : now},
+    {'dayOfWeek': 6, 'shifts': [{'start': '09:00', 'end': '12:00'}, {'start': '14:00', 'end': '19:00'}], 'created' : now, 'updated' : now},
+    {'dayOfWeek': 7, 'shifts': [], 'created' : now, 'updated' : now}
   ];
 
   //default services
   professional.services = [
-    { '_id': 1, 'name' : 'Mão Simples', 'active' : false, 'price' : 0, 'duration' : 20, 'interval' : 10 },
-    { '_id': 2, 'name' : 'Pé Simples', 'active' : false, 'price' : 0, 'duration' : 30, 'interval' : 10 },
-    { '_id': 3, 'name' : 'Mão Porcelana', 'active' : false, 'price' : 0, 'duration' : 60, 'interval' : 10 },
-    { '_id': 4, 'name' : 'Mão Postiça', 'active' : false, 'price' : 0, 'duration' : 60, 'interval' : 10 },
-    { '_id': 5, 'name' : 'Mão NailArt', 'active' : false, 'price' : 0, 'duration' : 60, 'interval' : 10 }
+    { '_id': new ObjectId(), 'name' : 'Mão Simples', 'active' : false, 'price' : 0, 'duration' : 20, 'interval' : 10, 'created' : now, 'updated' : now},
+    { '_id': new ObjectId(), 'name' : 'Pé Simples', 'active' : false, 'price' : 0, 'duration' : 30, 'interval' : 10, 'created' : now, 'updated' : now},
+    { '_id': new ObjectId(), 'name' : 'Mão Porcelana', 'active' : false, 'price' : 0, 'duration' : 60, 'interval' : 10, 'created' : now, 'updated' : now},
+    { '_id': new ObjectId(), 'name' : 'Mão Postiça', 'active' : false, 'price' : 0, 'duration' : 60, 'interval' : 10, 'created' : now, 'updated' : now},
+    { '_id': new ObjectId(), 'name' : 'Mão NailArt', 'active' : false, 'price' : 0, 'duration' : 60, 'interval' : 10 , 'created' : now, 'updated' : now}
   ];
 
-  //default packages
-  professional.packages = [
-    { '_id': new ObjectId(), 'duration': 50, 'interval': 10, 'active': false, 'price': 0,
+  //default packs
+  professional.packs = [
+    { '_id': new ObjectId(), 'duration': 50, 'interval': 10, 'active': false, 'price': 0, 'created' : now, 'updated' : now,
       'services': [ { 'name': 'Mão Simples', 'quantity': 4 },
                     { 'name': 'Pé Simples', 'quantity': 2 } ]
     }
   ];
 
   //created
-  professional.created = +new Date();
+  professional.created = now;
 
   //updated
-  professional.updated = +new Date();
+  professional.updated = now;
 
   //active
   professional.active = true;
@@ -74,6 +64,36 @@ exports.findOrCreate = function(professional, callback) {
   });
 };
 
+exports.retrieve = function(_id, callback) {
+
+  var collection = mongodb.DB.collection('professional');
+
+  var query = {'_id': new ObjectId(_id)};
+
+  collection.find(query).limit(1).next(function(err, result) {
+    if (err) callback(err, null);
+    callback(err, result);
+  });
+};
+
+exports.update = function(professional, callback) {
+
+  var collection = mongodb.DB.collection('professional');
+
+  var now = +new Date();
+
+  var query = {'_id': new ObjectId(professional._id)};
+  var options = {'returnOriginal': false};
+
+  professional._id = new ObjectId(professional._id);
+  professional.updated = now;
+
+  collection.findOneAndUpdate(query, professional, options, function(err, result) {
+    if (err) callback(err, null);
+    callback(err, result.value);
+  });
+};
+
 exports.delete = function(_id, callback) {
 
   var collection = mongodb.DB.collection('professional');
@@ -83,85 +103,5 @@ exports.delete = function(_id, callback) {
   collection.deleteOne(query, function(err, result) {
     if (err) callback(err, null);
     callback(err, result.deletedCount);
-  });
-};
-
-exports.saveService = function(_id, service, callback) {
-
-  var collection = mongodb.DB.collection('professional');
-
-  var query = {'_id': new ObjectId(_id), 'services': {'$elemMatch': {'_id': service._id}}};
-  var update = {'$set': {'services.$': service, 'updated': +new Date()}};
-  var options = {'returnOriginal': false, 'projection': {'services': true}};
-
-  collection.findOneAndUpdate(query, update, options, function(err, result) {
-    if (err) callback(err, null);
-    callback(err, result.value);
-  });
-};
-
-exports.saveSchedule = function(_id, schedule, callback) {
-
-  var collection = mongodb.DB.collection('professional');
-
-  var query = {'_id': new ObjectId(_id), 'schedule': {'$elemMatch': {'dayOfWeek': schedule.dayOfWeek}}};
-  var update = {'$set': {'schedule.$': schedule, 'updated': +new Date()}};
-  var options = {'returnOriginal': false, 'projection': {'schedule': true}};
-
-  collection.findOneAndUpdate(query, update, options, function(err, result) {
-    if (err) callback(err, null);
-    callback(err, result.value);
-  });
-};
-
-exports.savePackage = function(_id, pkg, callback) {
-
-  var collection = mongodb.DB.collection('professional');
-
-  var _package = _.clone(pkg);
-
-  var query = undefined;
-  var update = undefined;
-  var options = undefined;
-
-  if (pkg._id) {
-    _package.updated = +new Date();
-    _package._id = new ObjectId(pkg._id);
-
-    query = {'_id': new ObjectId(_id), 'packages': {'$elemMatch': {'_id': _package._id}}};
-    update = {'$set': {'packages.$': _package, 'updated': +new Date()}};
-    options = {'returnOriginal': false, 'projection': {'packages': true}};
-
-  } else {
-    _package.updated = +new Date();
-    _package.created = +new Date();
-    _package._id = new ObjectId();
-
-    query = {'_id': new ObjectId(_id)};
-    update = {'$push': {'packages': _package}, '$set': {'updated': +new Date()}};
-    options = {'returnOriginal': false, 'projection': {'packages': true}};
-
-  }
-
-  collection.updateOne(query, update, options, function(err, result) {
-    if (err) callback(err, null);
-
-    callback(err, _package._id);
-  });
-};
-
-exports.save = function(professional, callback) {
-
-  var collection = mongodb.DB.collection('professional');
-
-  var query = {'_id': new ObjectId(professional._id)};
-  var options = {'returnOriginal': false};
-
-  professional._id = new ObjectId(professional._id);
-  professional.updated = +new Date();
-
-  collection.findOneAndUpdate(query, professional, options, function(err, result) {
-    if (err) callback(err, null);
-    callback(err, result.value);
   });
 };
