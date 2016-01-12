@@ -17,7 +17,7 @@ exports.create = function(_id, schedule, callback) {
 
   var query = {'_id': new ObjectId(_id)};
   var update = {'$push': {'schedule': _schedule}, '$set': {'updated': now}};
-  var options = {'returnOriginal': false, 'projection': {'schedule': true}};
+  var options = {'returnOriginal': false, 'projection': {'_id': false, 'schedule': true}};
 
   collection.findOneAndUpdate(query, update, options, function(err, result) {
     if (err) callback(err, null);
@@ -25,13 +25,25 @@ exports.create = function(_id, schedule, callback) {
   });
 };
 
-exports.retrieve = function(_id, callback) {
+exports.retrieve = function(_id, schedule, callback) {
+
+  var collection = mongodb.DB.collection('professional');
+
+  var query = {'_id': new ObjectId(_id), 'schedule': {'$elemMatch': {'dayOfWeek': parseInt(schedule)}}};
+
+  collection.find(query).project({'_id': false, 'schedule.$': true}).next(function(err, result) {
+    if (err) callback(err, null);
+    callback(err, result);
+  });
+};
+
+exports.retrieveAll = function(_id, callback) {
 
   var collection = mongodb.DB.collection('professional');
 
   var query = {'_id': new ObjectId(_id)};
 
-  collection.find(query).limit(1).project({'schedule': true}).next(function(err, result) {
+  collection.find(query).project({'_id': false, 'schedule': true}).next(function(err, result) {
     if (err) callback(err, null);
     callback(err, result);
   });
@@ -49,7 +61,7 @@ exports.update = function(_id, schedule, callback) {
 
   var query = {'_id': new ObjectId(_id), 'schedule': {'$elemMatch': {'dayOfWeek': _schedule.dayOfWeek}}};
   var update = {'$set': {'schedule.$': _schedule, 'updated': now}};
-  var options = {'returnOriginal': false, 'projection': {'schedule': true}};
+  var options = {'returnOriginal': false, 'projection': {'_id': false, 'schedule': true}};
 
   collection.findOneAndUpdate(query, update, options, function(err, result) {
     if (err) callback(err, null);

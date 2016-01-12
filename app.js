@@ -15,6 +15,10 @@ mongodb.connect();
 var authenticator = require('./services/authenticator');
 authenticator.init();
 
+//authorization
+var authorization = require('./services/authorization');
+app.use(authorization);
+
 //content-type
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());

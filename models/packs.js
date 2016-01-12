@@ -18,7 +18,7 @@ exports.create = function(_id, pkg, callback) {
 
   var query = {'_id': new ObjectId(_id)};
   var update = {'$push': {'packs': _pack}, '$set': {'updated': now}};
-  var options = {'returnOriginal': false, 'projection': {'packs': true}};
+  var options = {'returnOriginal': false, 'projection': {'_id': false, 'packs': true}};
 
   collection.findOneAndUpdate(query, update, options, function(err, result) {
     if (err) callback(err, null);
@@ -26,13 +26,25 @@ exports.create = function(_id, pkg, callback) {
   });
 };
 
-exports.retrieve = function(_id, callback) {
+exports.retrieve = function(_id, pack, callback) {
+
+  var collection = mongodb.DB.collection('professional');
+
+  var query = {'_id': new ObjectId(_id), 'packs': {'$elemMatch': {'_id': new ObjectId(pack)}}};
+
+  collection.find(query).project({'_id': false, 'packs.$': true}).next(function(err, result) {
+    if (err) callback(err, null);
+    callback(err, result);
+  });
+};
+
+exports.retrieveAll = function(_id, callback) {
 
   var collection = mongodb.DB.collection('professional');
 
   var query = {'_id': new ObjectId(_id)};
 
-  collection.find(query).limit(1).project({'packs': true}).next(function(err, result) {
+  collection.find(query).project({'_id': false, 'packs': true}).next(function(err, result) {
     if (err) callback(err, null);
     callback(err, result);
   });
@@ -51,7 +63,7 @@ exports.update = function(_id, pkg, callback) {
 
   var query = {'_id': new ObjectId(_id), 'packs': {'$elemMatch': {'_id': _pack._id}}};
   var update = {'$set': {'packs.$': _pack, 'updated': now}};
-  var options = {'returnOriginal': false, 'projection': {'packs': true}};
+  var options = {'returnOriginal': false, 'projection': {'_id': false, 'packs': true}};
 
   collection.findOneAndUpdate(query, update, options, function(err, result) {
     if (err) callback(err, null);
