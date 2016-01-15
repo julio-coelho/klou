@@ -27,16 +27,16 @@ exports.create = function(professional, callback) {
 
   //default services
   professional.services = [
-    { '_id': new ObjectId(), 'name' : 'Mão Simples', 'active' : false, 'price' : 0, 'duration' : 20, 'interval' : 10, 'created' : now, 'updated' : now},
-    { '_id': new ObjectId(), 'name' : 'Pé Simples', 'active' : false, 'price' : 0, 'duration' : 30, 'interval' : 10, 'created' : now, 'updated' : now},
-    { '_id': new ObjectId(), 'name' : 'Mão Porcelana', 'active' : false, 'price' : 0, 'duration' : 60, 'interval' : 10, 'created' : now, 'updated' : now},
-    { '_id': new ObjectId(), 'name' : 'Mão Postiça', 'active' : false, 'price' : 0, 'duration' : 60, 'interval' : 10, 'created' : now, 'updated' : now},
-    { '_id': new ObjectId(), 'name' : 'Mão NailArt', 'active' : false, 'price' : 0, 'duration' : 60, 'interval' : 10 , 'created' : now, 'updated' : now}
+    { '_id': new ObjectId(), 'name' : 'Mão Simples', 'active' : false, 'price' : 0, 'duration' : 30, 'interval' : 5, 'created' : now, 'updated' : now},
+    { '_id': new ObjectId(), 'name' : 'Pé Simples', 'active' : false, 'price' : 0, 'duration' : 30, 'interval' : 5, 'created' : now, 'updated' : now},
+    { '_id': new ObjectId(), 'name' : 'Mão Porcelana', 'active' : false, 'price' : 0, 'duration' : 30, 'interval' : 5, 'created' : now, 'updated' : now},
+    { '_id': new ObjectId(), 'name' : 'Mão Postiça', 'active' : false, 'price' : 0, 'duration' : 30, 'interval' : 5, 'created' : now, 'updated' : now},
+    { '_id': new ObjectId(), 'name' : 'Mão NailArt', 'active' : false, 'price' : 0, 'duration' : 30, 'interval' : 5 , 'created' : now, 'updated' : now}
   ];
 
   //default packs
   professional.packs = [
-    { '_id': new ObjectId(), 'duration': 50, 'interval': 10, 'active': false, 'price': 0, 'created' : now, 'updated' : now,
+    { '_id': new ObjectId(), 'duration': 60, 'interval': 5, 'active': false, 'price': 0, 'created' : now, 'updated' : now,
       'services': [ { 'name': 'Mão Simples', 'quantity': 4 },
                     { 'name': 'Pé Simples', 'quantity': 2 } ]
     }
