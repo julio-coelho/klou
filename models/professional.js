@@ -16,13 +16,13 @@ exports.create = function(professional, callback) {
 
   //default schedule
   professional.schedule = [
+    {'dayOfWeek': 0, 'shifts': [], 'created' : now, 'updated' : now},
     {'dayOfWeek': 1, 'shifts': [{'start': '08:00', 'end': '12:00'}, {'start': '13:00', 'end': '17:00'}], 'created' : now, 'updated' : now},
     {'dayOfWeek': 2, 'shifts': [{'start': '08:00', 'end': '12:00'}, {'start': '13:00', 'end': '17:00'}], 'created' : now, 'updated' : now},
     {'dayOfWeek': 3, 'shifts': [{'start': '08:00', 'end': '12:00'}, {'start': '13:00', 'end': '17:00'}], 'created' : now, 'updated' : now},
     {'dayOfWeek': 4, 'shifts': [{'start': '08:00', 'end': '12:00'}, {'start': '13:00', 'end': '17:00'}], 'created' : now, 'updated' : now},
     {'dayOfWeek': 5, 'shifts': [{'start': '08:00', 'end': '12:00'}, {'start': '13:00', 'end': '17:00'}], 'created' : now, 'updated' : now},
-    {'dayOfWeek': 6, 'shifts': [{'start': '09:00', 'end': '12:00'}, {'start': '14:00', 'end': '19:00'}], 'created' : now, 'updated' : now},
-    {'dayOfWeek': 7, 'shifts': [], 'created' : now, 'updated' : now}
+    {'dayOfWeek': 6, 'shifts': [{'start': '09:00', 'end': '12:00'}, {'start': '14:00', 'end': '19:00'}], 'created' : now, 'updated' : now}
   ];
 
   //default services
